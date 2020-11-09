@@ -31,7 +31,7 @@ Step 2. Add the dependency
 ```
 
 Step 4. add selection listener
-```kotlin
+```java
   binding.timePicker.onSelectionChanged = { start, end ->
       //...
   }
