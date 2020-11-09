@@ -32,7 +32,8 @@ Step 2. Add the dependency
 
 Step 4. add selection listener
 ```java
-  binding.timePicker.onSelectionChanged = { start, end ->
+  val timePicker = findViewById<PersianDatePickerView>(R.id.time_picker)
+  timePicker.onSelectionChanged = { start, end ->
       //...
   }
 ```
