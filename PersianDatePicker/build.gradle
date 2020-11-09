@@ -4,7 +4,6 @@ plugins {
     id 'com.github.dcendents.android-maven'
 }
 group = 'com.github.omidfaraji'
-version = '1.0'
 
 android {
     compileSdkVersion 30
