@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NonSwipeableViewPager">
+        <attr name="measureSpecMode" format="enum">
+            <enum name="unspecified" value="0"/>
+            <enum name="exactly" value="1"/>
+            <enum name="at_most" value="2"/>
+
+        </attr>
+    </declare-styleable>
+</resources>

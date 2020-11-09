@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brownish_grey">#676767</color>
+    <color name="dark">#212b35</color>
+    <color name="white">#ffffff</color>
+    <color name="dark_blue_grey">#112233</color>
+    <color name="date_background_color">#B4E1FA</color>
+    <color name="white_three">#F2F2F2</color>
+    <color name="dusk">#4f587d</color>
+    <color name="pale_grey_three">#EBF5FA</color>
+    <color name="powderBlue">#b4e1fa</color>
+    <color name="paleGreyTwo">#ebf5fa</color>
+    <color name="darkBlueGrey">#112233</color>
+    <color name="bluishGrey">#889099</color>
+</resources>

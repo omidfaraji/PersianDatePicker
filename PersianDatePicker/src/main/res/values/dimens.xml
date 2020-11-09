@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="date_title_padding">12dp</dimen>
+    <dimen name="date_list_padding">12dp</dimen>
+    <dimen name="date_day_padding">2dp</dimen>
+</resources>
