@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.faraji.persiancalendarpicker.test", appContext.packageName)
+        assertEquals("com.faraji.example.persiancalendarpicker.test", appContext.packageName)
     }
 }

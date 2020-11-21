@@ -1,4 +1,4 @@
-package digital.kian.persiancalendarpicker
+package com.faraji.example.persiancalendarpicker
 
 import org.junit.Test
 
