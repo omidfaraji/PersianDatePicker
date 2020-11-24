@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.faraji.persiandatepicker.databinding.LayoutRecyclerViewBinding
+import com.faraji.persiandatepicker.util.PersianCalendar
 import com.faraji.persiandatepicker.util.dp
 
 class PersianDatePickerPagerAdapter(
@@ -17,10 +18,18 @@ class PersianDatePickerPagerAdapter(
             notifyDataSetChanged()
         }
 
+    fun indexOf(persianCalendar: PersianCalendar): Int {
+        return adapters
+            .indexOfFirst {
+                it.year == persianCalendar.persianYear && it.month == persianCalendar.persianMonth
+            }
+    }
+
     private val viewPool = RecyclerView.RecycledViewPool()
 
 
-    inner class ViewHolder(val binding: LayoutRecyclerViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: LayoutRecyclerViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setRecycledViewPool(viewPool)

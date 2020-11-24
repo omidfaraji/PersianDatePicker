@@ -57,14 +57,16 @@ class PersianDatePickerView @JvmOverloads constructor(
     fun setSelection(firstDay: Long? = null, lastDay: Long? = null) {
         firstSelectedDay = firstDay?.toPersianCalendar()
         lastSelectedDay = lastDay?.toPersianCalendar()
-        adapter.adapters
-            .indexOfFirst {
-                it.year == firstSelectedDay?.persianYear && it.month == firstSelectedDay?.persianMonth
-            }
-            .takeIf { it != -1 }
-            ?.let {
-                binding.pager.currentItem = it
-            }
+        firstSelectedDay?.let { persianCalendar ->
+            adapter
+                .indexOf(persianCalendar)
+                .takeIf { it != -1 }
+                ?.let {
+                    if (binding.pager.currentItem == it)
+                        binding.pager.setCurrentItem(0, false)
+                    binding.pager.setCurrentItem(it, false)
+                }
+        }
         applySelectionToAllMonths()
     }
 
@@ -153,8 +155,6 @@ class PersianDatePickerView @JvmOverloads constructor(
 
 
     private fun initPager() {
-        val currentCalendar = persianCalendar()
-
         binding.pager.adapter = adapter
         binding.pager.offscreenPageLimit = 1
         binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -164,7 +164,12 @@ class PersianDatePickerView @JvmOverloads constructor(
                 }
             }
         })
-        binding.pager.currentItem = currentCalendar.persianMonth - 1
+        adapter
+            .indexOf(persianCalendar())
+            .takeIf { it != -1 }
+            ?.let {
+                binding.pager.setCurrentItem(it, false)
+            }
     }
 
 }

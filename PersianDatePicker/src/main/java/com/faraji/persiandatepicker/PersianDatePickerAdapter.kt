@@ -26,7 +26,7 @@ class PersianDatePickerAdapter(
         private const val TYPE_NONE = 2
     }
 
-    private lateinit var calendarItems: List<CalendarItem>
+    private  var calendarItems: List<CalendarItem>
 
     init {
         calendarItems = calculateDays()
@@ -123,8 +123,8 @@ class PersianDatePickerAdapter(
 
 
     fun setSelection(firstDay: PersianCalendar?, lastDay: PersianCalendar?) {
-        firstSelectedDay = firstDay
-        lastSelectedDay = lastDay
+        firstSelectedDay = firstDay?.toStartDay()
+        lastSelectedDay = lastDay?.toStartDay()
         applySelection()
         notifyDataSetChanged()
     }
