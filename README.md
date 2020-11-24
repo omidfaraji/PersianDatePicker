@@ -2,7 +2,7 @@
 
 ## PersianDatePicker
 
-An Android Library witten in Kotlin to pick single and range date 
+An Android Library written in Kotlin to pick single and range date 
 
  <img src="https://raw.githubusercontent.com/omidfaraji/PersianDatePicker/master/ScreenShot/sc1.jpg"  height="600" width="500" />
 

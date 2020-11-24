@@ -68,7 +68,7 @@ fun PersianCalendar.nextMonth() = let {
 
 fun PersianCalendar.previousMonth() = let {
     if (persianMonth == 1)
-        persianCalendar(persianYear - 1, 1, 1)
+        persianCalendar(persianYear - 1, 12, 1)
     else
         persianCalendar(persianYear, persianMonth - 1, 1)
 }
