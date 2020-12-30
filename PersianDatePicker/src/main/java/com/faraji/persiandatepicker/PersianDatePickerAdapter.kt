@@ -11,13 +11,13 @@ import com.faraji.persiandatepicker.model.CalendarItem
 import com.faraji.persiandatepicker.util.*
 
 class PersianDatePickerAdapter(
-        var year: Int = persianCalendar().persianYear,
-        var month: Int = persianCalendar().persianMonth,
-        private val typeface: Typeface? = null,
-        var firstSelectedDay: PersianCalendar? = null,
-        var lastSelectedDay: PersianCalendar? = null,
-        val onMonthChangeListener: (Int) -> Unit = {},
-        var onDateRangeListener: (PersianCalendar?, PersianCalendar?) -> Unit = { _, _ -> }
+    var year: Int = persianCalendar().persianYear,
+    var month: Int = persianCalendar().persianMonth,
+    private val typeface: Typeface? = null,
+    var firstSelectedDay: PersianCalendar? = null,
+    var lastSelectedDay: PersianCalendar? = null,
+    val onMonthChangeListener: (Int) -> Unit = {},
+    var onDateRangeListener: (PersianCalendar?, PersianCalendar?) -> Unit = { _, _ -> }
 ) : RecyclerView.Adapter<PersianDatePickerAdapter.ViewHolder>() {
 
     companion object {
@@ -26,7 +26,7 @@ class PersianDatePickerAdapter(
         private const val TYPE_NONE = 2
     }
 
-    private  var calendarItems: List<CalendarItem>
+    private var calendarItems: List<CalendarItem>
 
     init {
         calendarItems = calculateDays()
@@ -60,14 +60,14 @@ class PersianDatePickerAdapter(
         val days = mutableListOf<CalendarItem>()
         PersianCalendarConstants.persianWeekDays.forEach {
             days.add(
-                    CalendarItem(
-                            name = it[0].toString(),
-                            number = -1,
-                            isSelected = false,
-                            isSelectable = false,
-                            timeMillis = -1,
-                            type = TYPE_TITLE
-                    )
+                CalendarItem(
+                    name = it[0].toString(),
+                    number = -1,
+                    isSelected = false,
+                    isSelectable = false,
+                    timeMillis = -1,
+                    type = TYPE_TITLE
+                )
             )
         }
         val firstDay = persianCalendar(year, month, 1)
@@ -75,14 +75,14 @@ class PersianDatePickerAdapter(
         for (i in 0 until firstDay.persianWeekDayIndex) {
             day = day.nextDay().toStartDay()
             days.add(
-                    CalendarItem(
-                            name = day.persianDay.toString(),
-                            number = day.persianDay,
-                            isSelected = false,
-                            isSelectable = false,
-                            timeMillis = day.timeInMillis,
-                            type = TYPE_NONE
-                    )
+                CalendarItem(
+                    name = day.persianDay.toString(),
+                    number = day.persianDay,
+                    isSelected = false,
+                    isSelectable = false,
+                    timeMillis = day.timeInMillis,
+                    type = TYPE_NONE
+                )
             )
 
         }
@@ -95,27 +95,27 @@ class PersianDatePickerAdapter(
             else
                 TYPE_NONE
             days.add(
-                    CalendarItem(
-                            name = day.persianDay.toString(),
-                            number = day.persianDay,
-                            isSelected = false,
-                            isSelectable = day.timeInMillis <= toDay.timeInMillis,
-                            timeMillis = day.timeInMillis,
-                            type = type
-                    )
+                CalendarItem(
+                    name = day.persianDay.toString(),
+                    number = day.persianDay,
+                    isSelected = false,
+                    isSelectable = day.timeInMillis <= toDay.timeInMillis,
+                    timeMillis = day.timeInMillis,
+                    type = type
+                )
             )
         }
-        for (i in lastDay.persianWeekDayIndex until 7) {
+        for (i in lastDay.persianWeekDayIndex + 1 until 7) {
             day = day.nextDay().toStartDay()
             days.add(
-                    CalendarItem(
-                            name = day.persianDay.toString(),
-                            number = day.persianDay,
-                            isSelected = false,
-                            isSelectable = false,
-                            timeMillis = day.timeInMillis,
-                            type = TYPE_NONE
-                    )
+                CalendarItem(
+                    name = day.persianDay.toString(),
+                    number = day.persianDay,
+                    isSelected = false,
+                    isSelectable = false,
+                    timeMillis = day.timeInMillis,
+                    type = TYPE_NONE
+                )
             )
         }
         return days
@@ -161,7 +161,7 @@ class PersianDatePickerAdapter(
     }
 
     inner class ViewHolder(val binding: ItemDayPersianCalendarPickerBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
@@ -241,12 +241,12 @@ class PersianDatePickerAdapter(
     }
 
     private fun ViewHolder.getColorCompat(color: Int) =
-            ContextCompat.getColor(binding.root.context, color)
+        ContextCompat.getColor(binding.root.context, color)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(
-                ItemDayPersianCalendarPickerBinding.inflate(inflater, parent, false)
+            ItemDayPersianCalendarPickerBinding.inflate(inflater, parent, false)
         )
     }
 
@@ -257,7 +257,7 @@ class PersianDatePickerAdapter(
 
 
     override fun getItemCount(): Int {
-        return 6 * 7 // days of week * month view rows
+        return calendarItems.size
     }
 
     override fun getItemViewType(position: Int): Int {
