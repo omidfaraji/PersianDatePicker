@@ -46,6 +46,7 @@ fun <T : Calendar> T.toStartDay() = apply {
 }
 
 fun <T : Calendar> T.toEndDay() = apply {
+    set(DAY_OF_MONTH, get(DAY_OF_MONTH) + 1)
     set(HOUR_OF_DAY, 4)
     set(MINUTE, 29)
     set(SECOND, 0)
