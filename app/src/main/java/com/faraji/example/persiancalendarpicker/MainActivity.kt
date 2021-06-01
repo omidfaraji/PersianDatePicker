@@ -14,13 +14,13 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun handleWeekly() {
-        val end = persianCalendar().toStartDay()
-        val start = end.daysAgo(6).toStartDay()
+        val end = persianCalendar()
+        val start = end.daysAgo(6)
         findViewById<PersianDatePickerView>(R.id.datePicker).setSelection(start.timeInMillis, end.timeInMillis)
     }
 
     fun PersianCalendar.daysAgo(count: Int) =
-        (toStartDay().timeInMillis - TimeUnit.DAYS.toMillis(count.toLong()))
+        (timeInMillis - TimeUnit.DAYS.toMillis(count.toLong()))
             .toPersianCalendar()
 
 }

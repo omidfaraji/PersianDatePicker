@@ -58,7 +58,7 @@ public class PersianCalendar extends GregorianCalendar {
    * GregorianCalendar by calling setTimeZone()
    */
   public PersianCalendar() {
-    setTimeZone(TimeZone.getTimeZone("GMT"));
+    setTimeZone(TimeZones.DEFAULT.getTimeZone());
   }
 
   /**

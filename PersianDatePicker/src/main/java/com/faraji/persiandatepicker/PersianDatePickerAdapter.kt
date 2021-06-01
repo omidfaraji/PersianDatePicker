@@ -75,7 +75,7 @@ class PersianDatePickerAdapter(
         val firstDay = persianCalendar(year, month, 1)
         var day = firstDay.toFirstDayInWeek().previousDay()
         for (i in 0 until firstDay.persianWeekDayIndex) {
-            day = day.nextDay().toStartDay()
+            day = day.nextDay()
             days.add(
                 CalendarItem(
                     name = day.persianDay.toString(),
@@ -91,10 +91,10 @@ class PersianDatePickerAdapter(
 
         }
 
-        val toDay = persianCalendar().toStartDay()
+        val toDay = persianCalendar()
         val lastDay = firstDay.toEndMonth()
         for (i in firstDay.persianDay..lastDay.persianDay) {
-            day = day.nextDay().toStartDay()
+            day = day.nextDay()
             val type = if (day.timeInMillis <= toDay.timeInMillis)
                 TYPE_DAY
             else
@@ -110,13 +110,13 @@ class PersianDatePickerAdapter(
                     backgroundResource = R.drawable.shape_unselected,
                     textColorResource = textColor,
                     isSelectable = day.timeInMillis <= toDay.timeInMillis,
-                    date = day.toStartDay(),
+                    date = day,
                     type = type
                 )
             )
         }
         for (i in lastDay.persianWeekDayIndex + 1 until 7) {
-            day = day.nextDay().toStartDay()
+            day = day.nextDay()
             days.add(
                 CalendarItem(
                     name = day.persianDay.toString(),

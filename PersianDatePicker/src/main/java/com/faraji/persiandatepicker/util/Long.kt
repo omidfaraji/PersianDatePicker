@@ -25,33 +25,19 @@ fun Long.toPersianCalendar() = PersianCalendar(this)
 
 fun PersianCalendar.toStartMonth() = copy().apply {
     setPersianDate(persianYear, persianMonth, 1)
-}.toStartDay()
+}
 
 fun PersianCalendar.toStartYear() = copy().apply {
     setPersianDate(persianYear, 1, 1)
-}.toStartDay()
+}
 
 fun PersianCalendar.toEndMonth() = copy().apply {
     if (persianMonth >= 12)
         setPersianDate(persianYear + 1, 1, 1)
     else
         setPersianDate(persianYear, persianMonth + 1, 1)
-}.previousDay().toStartDay()
+}.previousDay()
 
-fun <T : Calendar> T.toStartDay() = apply {
-    set(HOUR_OF_DAY, 4)
-    set(MINUTE, 30)
-    set(SECOND, 0)
-    set(MILLISECOND, 0)
-}
-
-fun <T : Calendar> T.toEndDay() = apply {
-    set(DAY_OF_MONTH, get(DAY_OF_MONTH) + 1)
-    set(HOUR_OF_DAY, 4)
-    set(MINUTE, 29)
-    set(SECOND, 0)
-    set(MILLISECOND, 0)
-}
 
 fun PersianCalendar.copy() = timeInMillis.toPersianCalendar()
 fun PersianCalendar.toFirstDayInWeek() = copy()
@@ -73,9 +59,6 @@ fun PersianCalendar.previousMonth() = let {
     else
         persianCalendar(persianYear, persianMonth - 1, 1)
 }
-
-fun PersianCalendar.isCurrentDay() =
-    persianCalendar().toStartDay().timeInMillis == toStartDay().timeInMillis
 
 
 fun persianCalendar(year: Int? = null, month: Int? = null, day: Int? = null) = PersianCalendar().apply {
