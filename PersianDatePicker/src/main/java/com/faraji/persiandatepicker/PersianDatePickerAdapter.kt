@@ -67,7 +67,7 @@ class PersianDatePickerAdapter(
                     backgroundResource = R.drawable.shape_unselected,
                     textColorResource = R.color.title_color,
                     isSelectable = false,
-                    timeMillis = -1,
+                    date = null,
                     type = TYPE_TITLE
                 )
             )
@@ -84,7 +84,7 @@ class PersianDatePickerAdapter(
                     backgroundResource = R.drawable.shape_unselected,
                     textColorResource = R.color.unselectable_day_color,
                     isSelectable = false,
-                    timeMillis = day.timeInMillis,
+                    date = day,
                     type = TYPE_NONE
                 )
             )
@@ -110,7 +110,7 @@ class PersianDatePickerAdapter(
                     backgroundResource = R.drawable.shape_unselected,
                     textColorResource = textColor,
                     isSelectable = day.timeInMillis <= toDay.timeInMillis,
-                    timeMillis = day.timeInMillis,
+                    date = day.toStartDay(),
                     type = type
                 )
             )
@@ -125,7 +125,7 @@ class PersianDatePickerAdapter(
                     backgroundResource = R.drawable.shape_unselected,
                     textColorResource = R.color.unselectable_day_color,
                     isSelectable = false,
-                    timeMillis = day.timeInMillis,
+                    date = day,
                     type = TYPE_NONE
                 )
             )
@@ -162,26 +162,32 @@ class PersianDatePickerAdapter(
         }
     }
 
-    private fun CalendarItem.isStartOrEnd() =
-        timeMillis == firstSelectedDay?.timeInMillis || timeMillis == lastSelectedDay?.timeInMillis
+    private fun CalendarItem.isStartOrEnd(): Boolean {
+        return firstSelectedDay?.isInSameDay(date!!) ?: false
+                || lastSelectedDay?.isInSameDay(date!!) ?: false
+    }
+
+    private fun PersianCalendar.isInSameDay(c: PersianCalendar) =
+        persianYear == c.persianYear && persianMonth == c.persianMonth && persianDay == c.persianDay
 
     private fun CalendarItem.setStartEndBackground() {
-        val first = firstSelectedDay?.timeInMillis ?: return
-        if (timeMillis == first && lastSelectedDay == null) {
+        val current = date!!
+        val first = firstSelectedDay ?: return
+        if (current.isInSameDay(first) && lastSelectedDay == null) {
             backgroundResource = R.drawable.shape_start_selection
             return
         }
 
-        val last = lastSelectedDay?.timeInMillis ?: return
-        if (first > last) {
-            if (timeMillis == first)
+        val last = lastSelectedDay ?: return
+        if (first.timeInMillis > last.timeInMillis) {
+            if (current.isInSameDay(first))
                 backgroundResource = R.drawable.shape_end_selection
-            else if (timeMillis == last)
+            else if (current.isInSameDay(last))
                 backgroundResource = R.drawable.shape_start_selection
         } else {
-            if (timeMillis == first)
+            if (current.isInSameDay(first))
                 backgroundResource = R.drawable.shape_start_selection
-            else if (timeMillis == last)
+            else if (current.isInSameDay(last))
                 backgroundResource = R.drawable.shape_end_selection
         }
     }
@@ -210,11 +216,11 @@ class PersianDatePickerAdapter(
 
         return if (lastDay != null) {
             if (firstDay < lastDay)
-                timeMillis in firstDay.timeInMillis..lastDay.timeInMillis
+                date!!.timeInMillis in firstDay.timeInMillis..lastDay.timeInMillis
             else
-                timeMillis in lastDay.timeInMillis..firstDay.timeInMillis
+                date!!.timeInMillis in lastDay.timeInMillis..firstDay.timeInMillis
         } else {
-            firstDay.timeInMillis == timeMillis
+            firstDay.isInSameDay(date!!)
         }
 
     }
@@ -237,13 +243,13 @@ class PersianDatePickerAdapter(
         private fun handleSelection(calendarItem: CalendarItem) {
             when {
                 firstSelectedDay == null -> {
-                    firstSelectedDay = calendarItem.timeMillis.toPersianCalendar()
+                    firstSelectedDay = calendarItem.date
                     applySelection()
                 }
                 lastSelectedDay == null -> {
-                    if (firstSelectedDay!!.timeInMillis == calendarItem.timeMillis)
+                    if (firstSelectedDay!!.isInSameDay(calendarItem.date!!))
                         return
-                    lastSelectedDay = calendarItem.timeMillis.toPersianCalendar()
+                    lastSelectedDay = calendarItem.date
                     applySelection()
                 }
                 else -> {

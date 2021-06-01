@@ -1,5 +1,7 @@
 package com.faraji.persiandatepicker.model
 
+import com.faraji.persiandatepicker.util.PersianCalendar
+
 data class CalendarItem(
     val name: String,
     val number: Int,
@@ -7,6 +9,6 @@ data class CalendarItem(
     var backgroundResource: Int,
     var textColorResource: Int,
     val isSelectable: Boolean,
-    val timeMillis: Long,
+    val date: PersianCalendar?,
     val type: Int
 )

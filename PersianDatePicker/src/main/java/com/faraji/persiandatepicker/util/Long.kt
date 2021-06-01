@@ -40,7 +40,7 @@ fun PersianCalendar.toEndMonth() = copy().apply {
 
 fun <T : Calendar> T.toStartDay() = apply {
     set(HOUR_OF_DAY, 4)
-    set(MINUTE, 31)
+    set(MINUTE, 30)
     set(SECOND, 0)
     set(MILLISECOND, 0)
 }
