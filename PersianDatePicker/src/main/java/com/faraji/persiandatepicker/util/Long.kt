@@ -39,17 +39,17 @@ fun PersianCalendar.toEndMonth() = copy().apply {
 }.previousDay().toStartDay()
 
 fun <T : Calendar> T.toStartDay() = apply {
-    set(HOUR_OF_DAY, 0)
-    set(MINUTE, 0)
+    set(HOUR_OF_DAY, 4)
+    set(MINUTE, 31)
     set(SECOND, 0)
     set(MILLISECOND, 0)
 }
 
 fun <T : Calendar> T.toEndDay() = apply {
-    set(HOUR_OF_DAY, 23)
-    set(MINUTE, 59)
-    set(SECOND, 59)
-    set(MILLISECOND, 59)
+    set(HOUR_OF_DAY, 4)
+    set(MINUTE, 29)
+    set(SECOND, 0)
+    set(MILLISECOND, 0)
 }
 
 fun PersianCalendar.copy() = timeInMillis.toPersianCalendar()

@@ -12,9 +12,8 @@ class PersianDatePickerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    defStyleRes: Int = 0,
     var onSelectionChanged: (Long?, Long?) -> Unit = { _, _ -> }
-) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
+) : RelativeLayout(context, attrs, defStyleAttr) {
 
     private val binding by lazy {
         FragmentMonthBinding.inflate(
@@ -109,7 +108,9 @@ class PersianDatePickerView @JvmOverloads constructor(
     }
 
     private fun applySelectionToAllMonths() {
-        monthAdapters.forEach { it.setSelection(firstSelectedDay, lastSelectedDay) }
+        monthAdapters.forEach {
+            it.setSelection(firstSelectedDay, lastSelectedDay)
+        }
     }
 
     override fun onFinishInflate() {
@@ -120,7 +121,7 @@ class PersianDatePickerView @JvmOverloads constructor(
     private fun init() {
         binding.next.setOnClickListener { nextMonth() }
         binding.txtNextMonth.setOnClickListener { nextMonth() }
-        binding.before.setOnClickListener { previousMonth() }
+        binding.previous.setOnClickListener { previousMonth() }
         binding.txtPreviousMonth.setOnClickListener { previousMonth() }
         initPager()
     }
@@ -143,11 +144,11 @@ class PersianDatePickerView @JvmOverloads constructor(
 
 
     private fun onMonthSelected(calendar: PersianCalendar) {
-        val previousIndex: Int = calendar.previousMonth().persianMonth - 1
-        val nextIndex: Int = calendar.nextMonth().persianMonth - 1
+        val previousName = calendar.previousMonth().persianMonthName
+        val nextName = calendar.nextMonth().persianMonthName
         PersianCalendarConstants.persianMonthNames.let {
-            binding.txtPreviousMonth.text = it[previousIndex]
-            binding.txtNextMonth.text = it[nextIndex]
+            binding.txtPreviousMonth.text = previousName
+            binding.txtNextMonth.text = nextName
         }
         binding.title.text = calendar.persianMonthName.plus(" ").plus(calendar.persianYear)
 

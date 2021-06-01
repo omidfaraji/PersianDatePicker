@@ -10,6 +10,7 @@
     <color name="pale_grey_three">#EBF5FA</color>
     <color name="powderBlue">#b4e1fa</color>
     <color name="paleGreyTwo">#ebf5fa</color>
-    <color name="darkBlueGrey">#112233</color>
-    <color name="bluishGrey">#889099</color>
+    <color name="selectable_day_color">#112233</color>
+    <color name="title_color">#889099</color>
+    <color name="unselectable_day_color">#889099</color>
 </resources>

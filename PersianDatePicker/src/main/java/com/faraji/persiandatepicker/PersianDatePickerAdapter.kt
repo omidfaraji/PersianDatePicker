@@ -1,6 +1,6 @@
 package com.faraji.persiandatepicker
 
-import android.graphics.Color
+import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -64,6 +64,8 @@ class PersianDatePickerAdapter(
                     name = it[0].toString(),
                     number = -1,
                     isSelected = false,
+                    backgroundResource = R.drawable.shape_unselected,
+                    textColorResource = R.color.title_color,
                     isSelectable = false,
                     timeMillis = -1,
                     type = TYPE_TITLE
@@ -79,6 +81,8 @@ class PersianDatePickerAdapter(
                     name = day.persianDay.toString(),
                     number = day.persianDay,
                     isSelected = false,
+                    backgroundResource = R.drawable.shape_unselected,
+                    textColorResource = R.color.unselectable_day_color,
                     isSelectable = false,
                     timeMillis = day.timeInMillis,
                     type = TYPE_NONE
@@ -86,6 +90,7 @@ class PersianDatePickerAdapter(
             )
 
         }
+
         val toDay = persianCalendar().toStartDay()
         val lastDay = firstDay.toEndMonth()
         for (i in firstDay.persianDay..lastDay.persianDay) {
@@ -94,11 +99,16 @@ class PersianDatePickerAdapter(
                 TYPE_DAY
             else
                 TYPE_NONE
+            val selectable = day.timeInMillis <= toDay.timeInMillis
+            val textColor =
+                if (selectable) R.color.selectable_day_color else R.color.unselectable_day_color
             days.add(
                 CalendarItem(
                     name = day.persianDay.toString(),
                     number = day.persianDay,
                     isSelected = false,
+                    backgroundResource = R.drawable.shape_unselected,
+                    textColorResource = textColor,
                     isSelectable = day.timeInMillis <= toDay.timeInMillis,
                     timeMillis = day.timeInMillis,
                     type = type
@@ -112,6 +122,8 @@ class PersianDatePickerAdapter(
                     name = day.persianDay.toString(),
                     number = day.persianDay,
                     isSelected = false,
+                    backgroundResource = R.drawable.shape_unselected,
+                    textColorResource = R.color.unselectable_day_color,
                     isSelectable = false,
                     timeMillis = day.timeInMillis,
                     type = TYPE_NONE
@@ -123,8 +135,8 @@ class PersianDatePickerAdapter(
 
 
     fun setSelection(firstDay: PersianCalendar?, lastDay: PersianCalendar?) {
-        firstSelectedDay = firstDay?.toStartDay()
-        lastSelectedDay = lastDay?.toStartDay()
+        firstSelectedDay = firstDay
+        lastSelectedDay = lastDay
         applySelection()
         notifyDataSetChanged()
     }
@@ -133,6 +145,52 @@ class PersianDatePickerAdapter(
     private fun applySelection() {
         calendarItems.filter { it.type != TYPE_TITLE }.forEach {
             it.isSelected = it.isInSelectionRange()
+            it.setBackground()
+            it.setTextColor()
+        }
+    }
+
+    private fun CalendarItem.setBackground() {
+        when {
+            isStartOrEnd() ->
+                setStartEndBackground()
+            isSelected ->
+                backgroundResource = R.drawable.shape_selected
+            else ->
+                backgroundResource = R.drawable.shape_unselected
+
+        }
+    }
+
+    private fun CalendarItem.isStartOrEnd() =
+        timeMillis == firstSelectedDay?.timeInMillis || timeMillis == lastSelectedDay?.timeInMillis
+
+    private fun CalendarItem.setStartEndBackground() {
+        val first = firstSelectedDay?.timeInMillis ?: return
+        if (timeMillis == first && lastSelectedDay == null) {
+            backgroundResource = R.drawable.shape_start_selection
+            return
+        }
+
+        val last = lastSelectedDay?.timeInMillis ?: return
+        if (first > last) {
+            if (timeMillis == first)
+                backgroundResource = R.drawable.shape_end_selection
+            else if (timeMillis == last)
+                backgroundResource = R.drawable.shape_start_selection
+        } else {
+            if (timeMillis == first)
+                backgroundResource = R.drawable.shape_start_selection
+            else if (timeMillis == last)
+                backgroundResource = R.drawable.shape_end_selection
+        }
+    }
+
+    private fun CalendarItem.setTextColor() {
+        when (type) {
+            TYPE_DAY -> textColorResource = R.color.selectable_day_color
+            TYPE_TITLE -> textColorResource = R.color.title_color
+            TYPE_NONE -> textColorResource = R.color.unselectable_day_color
         }
     }
 
@@ -150,13 +208,14 @@ class PersianDatePickerAdapter(
         if (firstDay == null)
             return false
 
-        return if (lastDay != null)
+        return if (lastDay != null) {
             if (firstDay < lastDay)
                 timeMillis in firstDay.timeInMillis..lastDay.timeInMillis
             else
                 timeMillis in lastDay.timeInMillis..firstDay.timeInMillis
-        else firstDay.timeInMillis == timeMillis
-
+        } else {
+            firstDay.timeInMillis == timeMillis
+        }
 
     }
 
@@ -164,6 +223,7 @@ class PersianDatePickerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         init {
+            typeface?.let { binding.txtItemDay.typeface = it }
             binding.root.setOnClickListener {
                 val day = calendarItems[adapterPosition]
                 if (day.isSelectable.not())
@@ -197,51 +257,15 @@ class PersianDatePickerAdapter(
 
         fun bind(calendarItem: CalendarItem) {
             binding.txtItemDay.text = calendarItem.name
-            typeface?.let { binding.txtItemDay.typeface = it }
-            setBackground(calendarItem)
-            setTextColor(calendarItem)
+            binding.txtItemDay.setBackgroundResource(calendarItem.backgroundResource)
+            binding.txtItemDay.setTextColor(binding.root.context.getColorCompat(calendarItem.textColorResource))
         }
 
-        private fun setBackground(calendarItem: CalendarItem) {
-            when {
-                calendarItem.timeMillis == firstSelectedDay?.timeInMillis && lastSelectedDay != null ->
-                    setStartEndBackground(calendarItem)
-                calendarItem.timeMillis == lastSelectedDay?.timeInMillis ->
-                    setStartEndBackground(calendarItem)
-                calendarItem.isSelected ->
-                    binding.txtItemDay.setBackgroundColor(getColorCompat(R.color.paleGreyTwo))
-                else ->
-                    binding.txtItemDay.setBackgroundColor(Color.parseColor("#ffffff"))
-            }
-        }
 
-        private fun setStartEndBackground(calendarItem: CalendarItem) {
-            val first = firstSelectedDay ?: return
-            val last = lastSelectedDay ?: return
-            if (first.timeInMillis > last.timeInMillis) {
-                if (calendarItem.timeMillis == first.timeInMillis)
-                    binding.txtItemDay.setBackgroundResource(R.drawable.shape_end_selection)
-                else if (calendarItem.timeMillis == last.timeInMillis)
-                    binding.txtItemDay.setBackgroundResource(R.drawable.shape_start_selection)
-            } else {
-                if (calendarItem.timeMillis == first.timeInMillis)
-                    binding.txtItemDay.setBackgroundResource(R.drawable.shape_start_selection)
-                else if (calendarItem.timeMillis == last.timeInMillis)
-                    binding.txtItemDay.setBackgroundResource(R.drawable.shape_end_selection)
-            }
-        }
-
-        private fun setTextColor(calendarItem: CalendarItem) {
-            when (calendarItem.type) {
-                TYPE_DAY -> binding.txtItemDay.setTextColor(getColorCompat(R.color.darkBlueGrey))
-                TYPE_TITLE -> binding.txtItemDay.setTextColor(getColorCompat(R.color.bluishGrey))
-                else -> binding.txtItemDay.setTextColor(Color.parseColor("#dddddd"))
-            }
-        }
     }
 
-    private fun ViewHolder.getColorCompat(color: Int) =
-        ContextCompat.getColor(binding.root.context, color)
+    private fun Context.getColorCompat(color: Int) =
+        ContextCompat.getColor(this, color)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
